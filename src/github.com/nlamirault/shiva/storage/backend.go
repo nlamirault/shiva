@@ -16,9 +16,17 @@ package storage
 
 import (
 	"errors"
+	"fmt"
+	"log"
+	"net"
+	"time"
 
-	// "github.com/docker/libkv"
+	"github.com/docker/libkv"
 	"github.com/docker/libkv/store"
+	"github.com/docker/libkv/store/boltdb"
+	"github.com/docker/libkv/store/consul"
+	"github.com/docker/libkv/store/etcd"
+	"github.com/docker/libkv/store/zookeeper"
 )
 
 const (
@@ -32,7 +40,9 @@ const (
 	ETCD string = "etcd"
 
 	// ZOOKEEPER backend
-	ZOOKEEPER string = "zookeeper"
+	ZOOKEEPER string = "zk"
+
+	DefaultBucket string = "shiva"
 )
 
 var (
@@ -40,52 +50,74 @@ var (
 	ErrNotSupported = errors.New("Backend storage not supported.")
 )
 
-type Storage interface {
-	Cat(path string) (*store.KVPair, error)
-	Ls(path string) ([]*store.KVPair, error)
-	Rm(path string, recursive bool) error
-	Dump(path string) ([]byte, error)
-	Restore(archive []byte) error
+type MACEntry struct {
+	MAC      net.HardwareAddr
+	IP       net.IP
+	Duration time.Duration
+	Attr     map[string]string
 }
 
-// New creates an instance of storage
-func New(backend string) (store.Store, error) {
-	// switch backend {
-	// case BOLTDB:
-	// 	return libkv.NewStore(
-	// 		store.BOLTDB,
-	// 		[]string{client},
-	// 		&store.Config{
-	// 			ConnectionTimeout: 10 * time.Second,
-	// 		},
-	// 	)
-	// case CONSUL:
-	// 	return libkv.NewStore(
-	// 		store.CONSUL,
-	// 		[]string{client},
-	// 		&store.Config{
-	// 			ConnectionTimeout: 10 * time.Second,
-	// 		},
-	// 	)
-	// case ETCD:
-	// 	return libkv.NewStore(
-	// 		store.ETCD,
-	// 		[]string{client},
-	// 		&store.Config{
-	// 			ConnectionTimeout: 10 * time.Second,
-	// 		},
-	// 	)
-	// case ZOOKEEPER:
-	// 	return libkv.NewStore(
-	// 		store.ZOOKEEPER,
-	// 		[]string{client},
-	// 		&store.Config{
-	// 			ConnectionTimeout: 10 * time.Second,
-	// 		},
-	// 	)
-	// default:
-	// 	return nil, fmt.Errorf("%s %s", ErrNotSupported.Error(), "")
-	// }
-	return nil, nil
+type IPEntry struct {
+	MAC net.HardwareAddr
+}
 
+type Storage struct {
+	store.Store
+}
+
+// type Backend interface {
+// 	InitDHCP()
+// 	GetIP(net.IP) (IPEntry, error)
+// 	HasIP(net.IP) bool
+// 	GetMAC(mac net.HardwareAddr, cascade bool) (entry *MACEntry, found bool, err error)
+// 	CreateLease(lease *MACEntry) error
+// 	WriteLease(lease *MACEntry) error
+// }
+
+func New(backend string, client string) (*Storage, error) {
+	st, err := newStore(backend, client)
+	if err != nil {
+		return nil, err
+	}
+	log.Printf("[INFO] Storage backend : %s", backend)
+	return &Storage{Store: st}, nil
+}
+
+func newStore(backend string, client string) (store.Store, error) {
+	conf := &store.Config{
+		Bucket:            DefaultBucket,
+		ConnectionTimeout: 10 * time.Second,
+	}
+	switch backend {
+	case BOLTDB:
+		boltdb.Register()
+		return libkv.NewStore(
+			store.BOLTDB,
+			[]string{client},
+			conf,
+		)
+	case CONSUL:
+		consul.Register()
+		return libkv.NewStore(
+			store.CONSUL,
+			[]string{client},
+			conf,
+		)
+	case ETCD:
+		etcd.Register()
+		return libkv.NewStore(
+			store.ETCD,
+			[]string{client},
+			conf,
+		)
+	case ZOOKEEPER:
+		zookeeper.Register()
+		return libkv.NewStore(
+			store.ZK,
+			[]string{client},
+			conf,
+		)
+	default:
+		return nil, fmt.Errorf("%s %s", ErrNotSupported.Error(), "")
+	}
 }

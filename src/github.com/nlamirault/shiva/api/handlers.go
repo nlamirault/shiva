@@ -52,8 +52,7 @@ func GetWebService(store store.Store, auth *Authentication) *echo.Echo {
 			return false
 		}))
 	}
-	// v1.Get("/urls/:url", ws.URLShow)
-	// v1.Post("/urls", ws.URLCreate)
-	// v1.Get("/stats/:url", ws.URLStats)
+	v1.Get("/address/:mac", ws.GetMacAddress)
+	v1.Post("/address", ws.AddMacAddress)
 	return e
 }

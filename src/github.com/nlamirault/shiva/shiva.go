@@ -20,46 +20,36 @@ import (
 	"log"
 	"net"
 
-	"github.com/docker/libkv/store"
 	dhcp "github.com/krolaw/dhcp4"
 
 	"github.com/nlamirault/shiva/api"
 	"github.com/nlamirault/shiva/logging"
 	"github.com/nlamirault/shiva/network"
-	//"github.com/nlamirault/shiva/storage"
+	"github.com/nlamirault/shiva/storage"
+	"github.com/nlamirault/shiva/version"
 )
 
 var (
-	port       string
-	debug      bool
-	version    bool
-	backend    string
-	backendURL string
-	dataDir    string
-	username   string
-	password   string
+	port     string
+	debug    bool
+	vrs      bool
+	backend  string
+	url      string
+	username string
+	password string
 )
 
 func init() {
 	// parse flags
-	flag.BoolVar(&version, "version", false, "print version and exit")
-	flag.BoolVar(&version, "v", false, "print version and exit (shorthand)")
+	flag.BoolVar(&vrs, "version", false, "print version and exit")
+	flag.BoolVar(&vrs, "v", false, "print version and exit (shorthand)")
 	flag.BoolVar(&debug, "d", false, "run in debug mode")
 	flag.StringVar(&port, "port", "8080", "port to use")
-	flag.StringVar(&backend, "backend", "boltdb", "Storage backend")
-	flag.StringVar(&dataDir, "data", "", "Data directory")
-	flag.StringVar(&backendURL, "backend-url", "", "URL for backends")
+	flag.StringVar(&backend, "backend", "", "Storage backend")
+	flag.StringVar(&url, "url", "", "URL backend")
 	flag.StringVar(&username, "username", "", "Username authentication")
 	flag.StringVar(&password, "password", "", "Password authentication")
 	flag.Parse()
-}
-
-func getStorage() (store.Store, error) {
-	// return storage.New(backend, &storage.Config{
-	// 	Data:       fmt.Sprintf("%s/%s", dataDir, backend),
-	// 	BackendURL: backendURL,
-	// })
-	return nil, nil
 }
 
 func main() {
@@ -68,15 +58,19 @@ func main() {
 	} else {
 		logging.SetLogging("INFO")
 	}
+	if vrs {
+		fmt.Printf("Shiva v%s\n", version.Version)
+		return
+	}
 
-	store, err := getStorage()
+	store, err := storage.New(backend, url)
 	if err != nil {
-		log.Printf("[ERROR] [shiva] %v", err)
+		log.Printf("[ERROR] [shiva] %s", err.Error())
 		return
 	}
 
 	var auth *api.Authentication
-	log.Printf("%s %s", username, password)
+	//log.Printf("%s %s", username, password)
 	if len(username) > 0 && len(password) > 0 {
 		auth = &api.Authentication{
 			Username: username,
@@ -93,7 +87,8 @@ func main() {
 
 	dhcpd := network.NewDHCPHandler(
 		net.IP{172, 30, 0, 1},
-		net.IP{172, 30, 0, 2})
+		net.IP{172, 30, 0, 2},
+		store)
 	err = dhcp.ListenAndServe(dhcpd)
 	if err != nil {
 		log.Printf("[ERROR] [shiva] %v", err)
