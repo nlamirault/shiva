@@ -35,7 +35,7 @@ type DHCPHandler struct {
 	start         net.IP        // Start of IP range to distribute
 	leaseRange    int           // Number of IPs to distribute (starting from start)
 	leaseDuration time.Duration // Lease period
-	leases        storage.Storage
+	Store         storage.Storage
 }
 
 func NewDHCPHandler(serverIP net.IP, startIP net.IP, store storage.Storage) *DHCPHandler {
@@ -44,7 +44,7 @@ func NewDHCPHandler(serverIP net.IP, startIP net.IP, store storage.Storage) *DHC
 		leaseDuration: 2 * time.Hour,
 		start:         startIP,
 		leaseRange:    50,
-		leases:        store,
+		Store:         store,
 		options: dhcp.Options{
 			dhcp.OptionSubnetMask:       []byte{255, 255, 240, 0},
 			dhcp.OptionRouter:           []byte(serverIP), // Presuming Server is also your router
@@ -65,6 +65,19 @@ func (d *DHCPHandler) ServeDHCP(packet dhcp.Packet, msgType dhcp.MessageType, re
 		// RFC 2131 4.3.2
 		mac := packet.CHAddr()
 		log.Printf("[INFO] [shiva] DHCP Request from %s\n", mac.String())
+		exists, err := d.Store.Exists([]byte(mac))
+		if err != nil {
+			log.Printf("[ERROR] [shiva] Error with storage: %s", err.Error())
+			return nil
+		}
+		if !exists {
+			log.Printf("[INFO] [shiva] MAC Address unknown")
+			return nil
+		}
+		if exists {
+			log.Printf("[INFO] [shiva] Assign IP address to MAC Address")
+			return nil
+		}
 
 	case dhcp.Decline:
 		// RFC 2131 4.3.3

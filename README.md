@@ -35,6 +35,29 @@ A REST Api is provided to display informations.
 
         $ make test
 
+
+## Simulate DHCP
+
+* Install [dhcping][]
+
+* Launch the server:
+
+        $ sudo bin/shiva -d -backend boltdb -url "/tmp/shiva.db"
+        2015/12/13 00:04:13 [DEBUG] [shiva] Init BoltDB storage : /tmp/shiva.db
+        2015/12/13 00:04:13 [DEBUG] [shiva] Creating web service using DB<"/tmp/shiva.db">
+        2015/12/13 00:04:13 [DEBUG] [shiva] Creates webservice with backend : DB<"/tmp/shiva.db">
+        2015/12/13 00:04:13 [INFO] [shiva] Launch Shiva on 8080 using boltdb backend
+        2015/12/13 00:06:45 [INFO] [shiva] DHCP Request from 00:20:18:56:29:8f
+        2015/12/13 00:11:44 [DEBUG] [shiva] Check entry exists with key :  V)�
+        2015/12/13 00:11:44 [INFO] [shiva] Find :
+        2015/12/13 00:11:44 [INFO] [shiva] MAC Address unknown
+
+* Simulate a DHCP request :
+
+        $ sudo dhcping -s 127.0.0.1 -h 00:20:18:56:29:8f
+        no answer
+
+
 ## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md).
