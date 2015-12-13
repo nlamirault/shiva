@@ -10,9 +10,11 @@ Develop :
 * [![Circle CI](https://circleci.com/gh/nlamirault/shiva/tree/develop.svg?style=svg)](https://circleci.com/gh/nlamirault/shiva/tree/develop)
 
 *Shiva* provides a simple DHCP server.
+
 Storage for IP addresses could be :
 - Distributed : using [Consul][], [Etcd][] or [Zookeeper][]
 - Local : [BoltDB][]
+
 A REST Api is provided to display informations.
 
 
