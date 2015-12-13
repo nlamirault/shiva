@@ -15,17 +15,18 @@
 package v1
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net"
 	"net/http"
 
-	"github.com/docker/libkv/store"
+	//"github.com/docker/libkv/store"
 	"github.com/labstack/echo"
 )
 
 type MACAddress struct {
-	MAC net.HardwareAddr `json:"mac"`
+	Address string `json:"mac"`
 }
 
 // ListMacAddress display all MAC addresses
@@ -38,7 +39,7 @@ func (ws *WebService) AddMacAddress(c *echo.Context) error {
 	var mac MACAddress
 	c.Bind(&mac)
 	log.Printf("[INFO] [shiva] MAC address to store: %v", mac)
-	exists, err := ws.Store.Exists(mac.MAC.String())
+	exists, err := ws.Store.Exists([]byte(mac.Address))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError,
 			&APIErrorResponse{Error: err.Error()})
@@ -46,11 +47,22 @@ func (ws *WebService) AddMacAddress(c *echo.Context) error {
 	if exists {
 		return c.JSON(http.StatusBadRequest,
 			&APIErrorResponse{
-				Error: fmt.Sprintf("MAC already exists %s", mac),
+				Error: fmt.Sprintf("MAC already exists %s",
+					mac.Address),
 			})
 	}
-	ws.Store.Put(mac.MAC.String(), mac.MAC, &store.WriteOptions{IsDir: true})
-	log.Printf("[INFO] [shiva] MAC stored : %v", mac)
+	_, err = net.ParseMAC(mac.Address)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError,
+			&APIErrorResponse{Error: err.Error()})
+	}
+	data, err := json.Marshal(mac)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError,
+			&APIErrorResponse{Error: err.Error()})
+	}
+	ws.Store.Put([]byte(mac.Address), data)
+	// log.Printf("[INFO] [shiva] MAC stored : %v", mac)
 	return c.JSON(http.StatusOK, mac)
 }
 
@@ -58,7 +70,8 @@ func (ws *WebService) AddMacAddress(c *echo.Context) error {
 func (ws *WebService) GetMacAddress(c *echo.Context) error {
 	mac := c.Param("mac")
 	log.Printf("[INFO] [shiva] Retrieve MAC using: %s\n", mac)
-	exists, err := ws.Store.Exists(mac)
+	data := []byte(mac)
+	exists, err := ws.Store.Exists(data)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError,
 			&APIErrorResponse{Error: err.Error()})
@@ -69,12 +82,19 @@ func (ws *WebService) GetMacAddress(c *echo.Context) error {
 				Error: fmt.Sprintf("Unknown MAC %s", mac),
 			})
 	}
-	kv, err := ws.Store.Get(mac)
+	entry, err := ws.Store.Get(data)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError,
 			&APIErrorResponse{Error: err.Error()})
 	}
-	log.Printf("[INFO] [shiva] Find MAC : %v", kv)
-	return c.JSON(http.StatusOK, kv)
+	log.Printf("[INFO] [shiva] Make MAC : %s\n", string(entry))
+	var addr *MACAddress
+	err = json.Unmarshal(entry, &addr)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError,
+			&APIErrorResponse{Error: err.Error()})
+	}
+	log.Printf("[INFO] [shiva] Find MAC : %v", addr)
+	return c.JSON(http.StatusOK, addr)
 
 }

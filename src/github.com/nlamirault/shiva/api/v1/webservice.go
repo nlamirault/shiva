@@ -21,7 +21,7 @@ import (
 	"log"
 	//"net/http"
 
-	"github.com/docker/libkv/store"
+	"github.com/nlamirault/shiva/storage"
 )
 
 var (
@@ -40,7 +40,7 @@ var (
 
 // WebService represents the Restful API
 type WebService struct {
-	Store store.Store
+	Store storage.Storage
 }
 
 // APIVersion represents version of the REST API
@@ -54,7 +54,7 @@ type APIErrorResponse struct {
 }
 
 // NewWebService creates a new WebService instance
-func NewWebService(store store.Store) *WebService {
+func NewWebService(store storage.Storage) *WebService {
 	log.Printf("[DEBUG] [shiva] Creates webservice with backend : %v",
 		store)
 	return &WebService{Store: store}

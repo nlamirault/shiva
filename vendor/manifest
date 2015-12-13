@@ -14,71 +14,16 @@
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/coreos/etcd/Godeps/_workspace/src/github.com/ugorji/go/codec",
-			"repository": "https://github.com/coreos/etcd",
-			"revision": "68a3962f6459c7a2f813ce9cbdb64447821381aa",
-			"branch": "master",
-			"path": "/Godeps/_workspace/src/github.com/ugorji/go/codec"
-		},
-		{
-			"importpath": "github.com/coreos/etcd/Godeps/_workspace/src/golang.org/x/net/context",
-			"repository": "https://github.com/coreos/etcd",
-			"revision": "68a3962f6459c7a2f813ce9cbdb64447821381aa",
-			"branch": "master",
-			"path": "/Godeps/_workspace/src/golang.org/x/net/context"
-		},
-		{
-			"importpath": "github.com/coreos/etcd/client",
-			"repository": "https://github.com/coreos/etcd",
-			"revision": "68a3962f6459c7a2f813ce9cbdb64447821381aa",
-			"branch": "master",
-			"path": "/client"
-		},
-		{
-			"importpath": "github.com/coreos/etcd/pkg/pathutil",
-			"repository": "https://github.com/coreos/etcd",
-			"revision": "68a3962f6459c7a2f813ce9cbdb64447821381aa",
-			"branch": "master",
-			"path": "/pkg/pathutil"
-		},
-		{
-			"importpath": "github.com/coreos/etcd/pkg/types",
-			"repository": "https://github.com/coreos/etcd",
-			"revision": "68a3962f6459c7a2f813ce9cbdb64447821381aa",
-			"branch": "master",
-			"path": "/pkg/types"
-		},
-		{
 			"importpath": "github.com/daaku/go.zipexe",
 			"repository": "https://github.com/daaku/go.zipexe",
 			"revision": "a5fe2436ffcb3236e175e5149162b41cd28bd27d",
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/davecgh/go-spew/spew",
-			"repository": "https://github.com/davecgh/go-spew",
-			"revision": "5215b55f46b2b919f50a1df0eaa5886afe4e3b3d",
-			"branch": "master",
-			"path": "/spew"
-		},
-		{
 			"importpath": "github.com/dgrijalva/jwt-go",
 			"repository": "https://github.com/dgrijalva/jwt-go",
 			"revision": "f164e17f59b82642a3895ba065c385db6c547344",
 			"branch": "master"
-		},
-		{
-			"importpath": "github.com/docker/libkv",
-			"repository": "https://github.com/docker/libkv",
-			"revision": "2f2380c8698abff4eb662f33b0e088e520ec416e",
-			"branch": "master"
-		},
-		{
-			"importpath": "github.com/docker/libkv/store",
-			"repository": "https://github.com/docker/libkv",
-			"revision": "2f2380c8698abff4eb662f33b0e088e520ec416e",
-			"branch": "master",
-			"path": "/store"
 		},
 		{
 			"importpath": "github.com/facebookgo/clock",
@@ -113,30 +58,24 @@
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/hashicorp/consul/api",
-			"repository": "https://github.com/hashicorp/consul",
-			"revision": "94f33972bdc1574738b00290b5b9ae1df445435e",
+			"importpath": "github.com/garyburd/redigo/internal",
+			"repository": "https://github.com/garyburd/redigo",
+			"revision": "6ece6e0a09f28cc399b21550cbf37ab39ba63cce",
 			"branch": "master",
-			"path": "/api"
+			"path": "/internal"
 		},
 		{
-			"importpath": "github.com/hashicorp/go-cleanhttp",
-			"repository": "https://github.com/hashicorp/go-cleanhttp",
-			"revision": "5df5ddc69534f1a4697289f1dca2193fbb40213f",
-			"branch": "master"
+			"importpath": "github.com/garyburd/redigo/redis",
+			"repository": "https://github.com/garyburd/redigo",
+			"revision": "6ece6e0a09f28cc399b21550cbf37ab39ba63cce",
+			"branch": "master",
+			"path": "/redis"
 		},
 		{
 			"importpath": "github.com/hashicorp/logutils",
 			"repository": "https://github.com/hashicorp/logutils",
 			"revision": "0dc08b1671f34c4250ce212759ebd880f743d883",
 			"branch": "master"
-		},
-		{
-			"importpath": "github.com/hashicorp/serf/coordinate",
-			"repository": "https://github.com/hashicorp/serf",
-			"revision": "e9ac4bb0c5721826d5cd3d1cd582c12fbc664bb8",
-			"branch": "master",
-			"path": "/coordinate"
 		},
 		{
 			"importpath": "github.com/kardianos/osext",
@@ -183,13 +122,6 @@
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/pmezard/go-difflib/difflib",
-			"repository": "https://github.com/pmezard/go-difflib",
-			"revision": "e8554b8641db39598be7f6342874b958f12ae1d4",
-			"branch": "master",
-			"path": "/difflib"
-		},
-		{
 			"importpath": "github.com/rs/cors",
 			"repository": "https://github.com/rs/cors",
 			"revision": "ceb1fbf238d7711a11a86a2622d0b85305348aeb",
@@ -198,35 +130,8 @@
 		{
 			"importpath": "github.com/rs/xhandler",
 			"repository": "https://github.com/rs/xhandler",
-			"revision": "768e938dd1b2901a776cf66e27a9737d64f9e15f",
+			"revision": "5456fc854eb3d65d0f5fb6e82bdc3555ab55c897",
 			"branch": "master"
-		},
-		{
-			"importpath": "github.com/samuel/go-zookeeper/zk",
-			"repository": "https://github.com/samuel/go-zookeeper",
-			"revision": "218e9c81c0dd8b3b18172b2bbfad92cc7d6db55f",
-			"branch": "master",
-			"path": "/zk"
-		},
-		{
-			"importpath": "github.com/stretchr/objx",
-			"repository": "https://github.com/stretchr/objx",
-			"revision": "1a9d0bb9f541897e62256577b352fdbc1fb4fd94",
-			"branch": "master"
-		},
-		{
-			"importpath": "github.com/stretchr/testify/assert",
-			"repository": "https://github.com/stretchr/testify",
-			"revision": "e3a8ff8ce36581f87a15341206f205b1da467059",
-			"branch": "master",
-			"path": "/assert"
-		},
-		{
-			"importpath": "github.com/stretchr/testify/mock",
-			"repository": "https://github.com/stretchr/testify",
-			"revision": "e3a8ff8ce36581f87a15341206f205b1da467059",
-			"branch": "master",
-			"path": "/mock"
 		},
 		{
 			"importpath": "github.com/thoas/stats",

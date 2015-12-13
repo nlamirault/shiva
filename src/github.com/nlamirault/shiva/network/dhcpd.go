@@ -35,10 +35,10 @@ type DHCPHandler struct {
 	start         net.IP        // Start of IP range to distribute
 	leaseRange    int           // Number of IPs to distribute (starting from start)
 	leaseDuration time.Duration // Lease period
-	leases        *storage.Storage
+	leases        storage.Storage
 }
 
-func NewDHCPHandler(serverIP net.IP, startIP net.IP, store *storage.Storage) *DHCPHandler {
+func NewDHCPHandler(serverIP net.IP, startIP net.IP, store storage.Storage) *DHCPHandler {
 	return &DHCPHandler{
 		ip:            serverIP,
 		leaseDuration: 2 * time.Hour,

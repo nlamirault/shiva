@@ -29,6 +29,10 @@ import (
 	"github.com/nlamirault/shiva/version"
 )
 
+const (
+	DefaultBucket string = "shiva"
+)
+
 var (
 	port     string
 	debug    bool
@@ -63,14 +67,17 @@ func main() {
 		return
 	}
 
-	store, err := storage.New(backend, url)
+	store, err := storage.New(
+		backend,
+		&storage.Config{
+			BackendURL: url,
+		})
 	if err != nil {
 		log.Printf("[ERROR] [shiva] %s", err.Error())
 		return
 	}
 
 	var auth *api.Authentication
-	//log.Printf("%s %s", username, password)
 	if len(username) > 0 && len(password) > 0 {
 		auth = &api.Authentication{
 			Username: username,

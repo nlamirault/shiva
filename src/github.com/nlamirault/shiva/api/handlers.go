@@ -17,11 +17,11 @@ package api
 import (
 	"log"
 
-	"github.com/docker/libkv/store"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
 	"github.com/nlamirault/shiva/api/v1"
+	"github.com/nlamirault/shiva/storage"
 )
 
 // Authentication represents Basic Authentication entities
@@ -31,7 +31,7 @@ type Authentication struct {
 }
 
 // GetWebService return a new gin.Engine
-func GetWebService(store store.Store, auth *Authentication) *echo.Echo {
+func GetWebService(store storage.Storage, auth *Authentication) *echo.Echo {
 	log.Printf("[DEBUG] [shiva] Creating web service using %v",
 		store)
 	ws := v1.NewWebService(store)
