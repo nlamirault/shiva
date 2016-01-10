@@ -79,3 +79,11 @@ Nicolas Lamirault <nicolas.lamirault@gmail.com>
 
 
 [badge-license]: https://img.shields.io/badge/license-Apache2-green.svg?style=flat
+
+[Consul]: https://www.consul.io/
+[Etcd]: https://github.com/coreos/etcd
+[Zookeeper]: https://zookeeper.apache.org/
+[BoltDB]: https://github.com/boltdb/bolt
+
+[dhcping]: http://www.mavetju.org/unix/general.php
+
