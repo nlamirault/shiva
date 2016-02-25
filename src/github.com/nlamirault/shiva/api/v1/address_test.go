@@ -98,7 +98,7 @@ func Test_GetValidMACAddress(t *testing.T) {
 
 	checkResponseHeader(t, rec.HeaderMap)
 	body := rec.Body.String()
-	if body != "{\"error\":\"Unknown MAC \"}" ||
+	if body != "{\n\"mac\": \"01:23:45:67:89:de\"\n}" ||
 		rec.Code != http.StatusOK {
 		t.Fatalf("Invalid API response: %s", body)
 	}
