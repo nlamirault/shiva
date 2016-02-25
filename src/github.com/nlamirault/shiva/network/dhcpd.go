@@ -1,4 +1,4 @@
-// Copyright (C) 2015 Nicolas Lamirault <nicolas.lamirault@gmail.com>
+// Copyright (C) 2015, 2016 Nicolas Lamirault <nicolas.lamirault@gmail.com>
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,11 +24,17 @@ import (
 	"github.com/nlamirault/shiva/storage"
 )
 
+const (
+	defaultNameServer = "8.8.8.8"
+	baseIP            = "192.168.0.1/24"
+)
+
 type lease struct {
 	nic    string    // Client's CHAddr
 	expiry time.Time // When the lease expires
 }
 
+// DHCPHandler represents a DHCP manager
 type DHCPHandler struct {
 	ip            net.IP        // Server IP to use
 	options       dhcp.Options  // Options to send to DHCP Clients
@@ -38,6 +44,7 @@ type DHCPHandler struct {
 	Store         storage.Storage
 }
 
+// NewDHCPHandler creates a handler for DHCP request
 func NewDHCPHandler(serverIP net.IP, startIP net.IP, store storage.Storage) *DHCPHandler {
 	return &DHCPHandler{
 		ip:            serverIP,
@@ -65,7 +72,7 @@ func (d *DHCPHandler) ServeDHCP(packet dhcp.Packet, msgType dhcp.MessageType, re
 		// RFC 2131 4.3.2
 		mac := packet.CHAddr()
 		log.Printf("[INFO] [shiva] DHCP Request from %s\n", mac.String())
-		exists, err := d.Store.Exists([]byte(mac))
+		exists, err := d.Store.Exists([]byte(mac.String()))
 		if err != nil {
 			log.Printf("[ERROR] [shiva] Error with storage: %s", err.Error())
 			return nil
@@ -75,8 +82,11 @@ func (d *DHCPHandler) ServeDHCP(packet dhcp.Packet, msgType dhcp.MessageType, re
 			return nil
 		}
 		if exists {
-			log.Printf("[INFO] [shiva] Assign IP address to MAC Address")
-			return nil
+			ipAddr := net.ParseIP("192.1.1.1")
+			log.Printf("[INFO] [shiva] Assign IP %s address to MAC Address %s", ipAddr, mac.String())
+			rp := dhcp.ReplyPacket(packet, dhcp.ACK, ipAddr, net.IP(reqOptions[dhcp.OptionRequestedIPAddress]), d.leaseDuration,
+				d.options.SelectOrderOrAll(reqOptions[dhcp.OptionParameterRequestList]))
+			return rp
 		}
 
 	case dhcp.Decline:

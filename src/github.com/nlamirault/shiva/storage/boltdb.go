@@ -1,4 +1,4 @@
-// Copyright (C) 2015 Nicolas Lamirault <nicolas.lamirault@gmail.com>
+// Copyright (C) 2015, 2016 Nicolas Lamirault <nicolas.lamirault@gmail.com>
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ func (db *BoltDB) Get(key []byte) ([]byte, error) {
 		return nil
 	})
 	if len(value) == 0 {
-		return nil, ErrBoltDBKeyNotFound
+		return nil, nil //ErrBoltDBKeyNotFound
 	}
 	// db.DB.Update(func(tx *bolt.Tx) error {
 	// 	b := tx.Bucket([]byte(bucketName))

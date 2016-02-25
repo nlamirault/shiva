@@ -1,4 +1,4 @@
-// Copyright (C) 2015 Nicolas Lamirault <nicolas.lamirault@gmail.com>
+// Copyright (C) 2015, 2016 Nicolas Lamirault <nicolas.lamirault@gmail.com>
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,48 +20,22 @@ import (
 )
 
 func Test_GetNotSupportedBackend(t *testing.T) {
-	backend, err := InitStorage(
-		"google", &Config{Data: "/tmp/google.db"})
+	backend, err := New("google", &Config{BackendURL: "/tmp/google.db"})
 	if backend != nil || err == nil {
 		t.Fatalf("Error retrieve an invalid backend")
 	}
 }
 
-func Test_GetMemDBBackend(t *testing.T) {
-	backend, err := InitStorage("memdb", &Config{Data: "/tmp"})
-	if err != nil || backend == nil {
-		t.Fatalf("Error retrieve MemDB backend %v.", err)
-	}
-}
-
 func Test_GetBoltDBBackend(t *testing.T) {
-	backend, err := InitStorage(
-		"boltdb", &Config{Data: "/tmp/foo.db"})
+	backend, err := New("boltdb", &Config{BackendURL: "/tmp/foo.db"})
 	if err != nil || backend == nil {
 		t.Fatalf("Error retrieve BoltDB backend %v.", err)
 	}
 }
 
-func Test_GetLevelDBBackend(t *testing.T) {
-	backend, err := InitStorage(
-		"leveldb", &Config{Data: "/tmp"})
-	if err != nil || backend == nil {
-		t.Fatalf("Error retrieve LevelDB backend %v.", err)
-	}
-}
-
 func Test_GetRedisBackend(t *testing.T) {
-	backend, err := InitStorage(
-		"redis", &Config{BackendURL: "127.0.0.1:6379"})
+	backend, err := New("redis", &Config{BackendURL: "127.0.0.1:6379"})
 	if err != nil || backend == nil {
 		t.Fatalf("Error retrieve Redis backend %v.", err)
-	}
-}
-
-func Test_GetMongoDBBackend(t *testing.T) {
-	backend, err := InitStorage(
-		"mongodb", &Config{BackendURL: "127.0.0.1:27017"})
-	if err != nil || backend == nil {
-		t.Fatalf("Error retrieve MongoDB backend %v.", err)
 	}
 }

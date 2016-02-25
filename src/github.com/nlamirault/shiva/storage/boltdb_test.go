@@ -1,4 +1,4 @@
-// Copyright (C) 2015 Nicolas Lamirault <nicolas.lamirault@gmail.com>
+// Copyright (C) 2015, 2016 Nicolas Lamirault <nicolas.lamirault@gmail.com>
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,32 +16,14 @@ package storage
 
 import (
 	// "fmt"
-	"io/ioutil"
-	"os"
 	"testing"
 
-	// "github.com/boltdb/bolt"
+	"github.com/nlamirault/shiva/utils"
 )
-
-// tempfile returns a temporary file path.
-func tempfile() string {
-	f, _ := ioutil.TempFile("", "boltdb-")
-	f.Close()
-	os.Remove(f.Name())
-	return f.Name()
-}
-
-// func addEntry(db *bolt.DB, key string, value string) {
-// 	db.Update(func(tx *bolt.Tx) error {
-// 		b := tx.Bucket([]byte(bucketName))
-// 		b.Put([]byte(key), []byte(value))
-// 		return nil
-// 	})
-// }
 
 // Ensure that gets a non-existent key returns nil.
 func TestBoltDB_Get_NonExistent(t *testing.T) {
-	db, err := NewBoltDB(tempfile())
+	db, err := NewBoltDB(utils.Tempfile())
 	if err != nil {
 		t.Fatalf("Can't create BoltDB test database.")
 	}
@@ -58,7 +40,7 @@ func TestBoltDB_Get_NonExistent(t *testing.T) {
 
 // Ensure that that gets an existent key returns value.
 func TestBoltDB_Get_Existent(t *testing.T) {
-	db, err := NewBoltDB(tempfile())
+	db, err := NewBoltDB(utils.Tempfile())
 	if err != nil {
 		t.Fatalf("Can't create BoltDB test database.")
 	}

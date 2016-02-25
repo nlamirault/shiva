@@ -12,4 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package utils
+
+import (
+	//"fmt"
+	"io/ioutil"
+	"os"
+)
+
+// Tempfile returns a temporary file path.
+func Tempfile() string {
+	f, _ := ioutil.TempFile("", "boltdb")
+	f.Close()
+	os.Remove(f.Name())
+	return f.Name()
+}
